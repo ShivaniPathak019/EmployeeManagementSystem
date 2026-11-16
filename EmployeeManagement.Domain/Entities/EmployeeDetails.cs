@@ -1,6 +1,6 @@
 namespace EmployeeManagement.Domain.Entities
 {
-    public class Employee
+    public class EmployeeDetails
     {
         public int Id { get; set; }
         public string EmployeeCode { get; set; } = string.Empty;
@@ -15,7 +15,7 @@ namespace EmployeeManagement.Domain.Entities
         public bool IsActive { get; set; } = true;
 
         public int DepartmentId { get; set; }
-        public Department Department { get; set; } = null!;
+        public DepartmentDetails Department { get; set; } = null!;
 
         public int DesignationId { get; set; }
         public Designation Designation { get; set; } = null!;

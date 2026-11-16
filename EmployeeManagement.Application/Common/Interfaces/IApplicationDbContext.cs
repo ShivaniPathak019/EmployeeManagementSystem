@@ -6,9 +6,9 @@ namespace EmployeeManagement.Application.Common.Interfaces
 {
     public interface IApplicationDbContext
     {
-        DbSet<Department> Departments { get; }
+        DbSet<DepartmentDetails> Departments { get; }
         DbSet<Designation> Designations { get; }
-        DbSet<Employee> Employees { get; }
+        DbSet<EmployeeDetails> Employees { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

@@ -11,9 +11,9 @@ namespace EmployeeManagement.Infrastructure.Persistence
         {
         }
 
-        public DbSet<Department> Departments => Set<Department>();
+        public DbSet<DepartmentDetails> Departments => Set<DepartmentDetails>();
         public DbSet<Designation> Designations => Set<Designation>();
-        public DbSet<Employee> Employees => Set<Employee>();
+        public DbSet<EmployeeDetails> Employees => Set<EmployeeDetails>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

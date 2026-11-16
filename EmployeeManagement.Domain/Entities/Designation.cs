@@ -6,6 +6,6 @@ namespace EmployeeManagement.Domain.Entities
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
 
-        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
+        public ICollection<EmployeeDetails> Employees { get; set; } = new List<EmployeeDetails>();
     }
 }
