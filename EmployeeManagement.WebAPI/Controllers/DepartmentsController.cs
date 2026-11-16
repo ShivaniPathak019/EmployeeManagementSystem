@@ -2,6 +2,8 @@ using EmployeeManagement.Application.Departments.Dtos;
 using EmployeeManagement.Application.Departments.Queries.GetAllDepartments;
 using EmployeeManagement.Application.Departments.Commands.CreateDepartment;
 using EmployeeManagement.Application.Departments.Queries.GetDepartmentById;
+using EmployeeManagement.Application.Departments.Commands.UpdateDepartment;
+using EmployeeManagement.Application.Departments.Commands.DeleteDepartment;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,5 +43,22 @@ public class DepartmentsController : ControllerBase
     {
         var result = await _mediator.Send(new GetDepartmentByIdQuery(id));
         return Ok(result);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, UpdateDepartmentCommand command)
+    {
+        if (id != command.Id)
+            return BadRequest("Route id and body id do not match.");
+
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _mediator.Send(new DeleteDepartmentCommand(id));
+        return NoContent();
     }
 }
