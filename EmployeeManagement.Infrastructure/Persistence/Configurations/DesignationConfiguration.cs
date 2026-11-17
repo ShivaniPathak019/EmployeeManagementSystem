@@ -6,6 +6,7 @@ public class DesignationConfiguration : IEntityTypeConfiguration<Designation>
 {
     public void Configure(EntityTypeBuilder<Designation> builder)
     {
+        builder.ToTable("DesignationDetails");
         builder.Property(d => d.Title)
         .IsRequired()
         .HasMaxLength(100);

@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using EmployeeManagement.Application;
 using EmployeeManagement.Infrastructure;
+using EmployeeManagement.WebAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 // ----- HTTP pipeline -----
 if (app.Environment.IsDevelopment())
 {

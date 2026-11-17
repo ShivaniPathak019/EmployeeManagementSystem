@@ -72,7 +72,7 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Designations");
+                    b.ToTable("DesignationDetails", (string)null);
                 });
 
             modelBuilder.Entity("EmployeeManagement.Domain.Entities.EmployeeDetails", b =>

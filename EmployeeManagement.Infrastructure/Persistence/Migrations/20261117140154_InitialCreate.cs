@@ -27,7 +27,7 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Designations",
+                name: "DesignationDetails",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -37,7 +37,7 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Designations", x => x.Id);
+                    table.PrimaryKey("PK_DesignationDetails", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,9 +69,9 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_EmployeeDetails_Designations_DesignationId",
+                        name: "FK_EmployeeDetails_DesignationDetails_DesignationId",
                         column: x => x.DesignationId,
-                        principalTable: "Designations",
+                        principalTable: "DesignationDetails",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -83,8 +83,8 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Designations_Title",
-                table: "Designations",
+                name: "IX_DesignationDetails_Title",
+                table: "DesignationDetails",
                 column: "Title",
                 unique: true);
 
@@ -121,7 +121,7 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                 name: "DepartmentDetails");
 
             migrationBuilder.DropTable(
-                name: "Designations");
+                name: "DesignationDetails");
         }
     }
 }

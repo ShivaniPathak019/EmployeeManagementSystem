@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeManagement.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261116053333_InitialCreate")]
+    [Migration("20261117140154_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -75,7 +75,7 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Designations");
+                    b.ToTable("DesignationDetails", (string)null);
                 });
 
             modelBuilder.Entity("EmployeeManagement.Domain.Entities.EmployeeDetails", b =>
