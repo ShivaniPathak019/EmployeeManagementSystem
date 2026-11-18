@@ -4,6 +4,7 @@ using EmployeeManagement.Application.Employees.Queries.GetEmployeeById;
 using EmployeeManagement.Application.Employees.Commands.CreateEmployee;
 using EmployeeManagement.Application.Employees.Commands.UpdateEmployee;
 using EmployeeManagement.Application.Employees.Commands.DeleteEmployee;
+using EmployeeManagement.Application.Common.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,9 +22,10 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<EmployeeDto>>> GetAll()
+    public async Task<ActionResult<PagedResult<EmployeeDto>>> GetAll(
+    [FromQuery] GetAllEmployeesQuery query)
     {
-        var result = await _mediator.Send(new GetAllEmployeesQuery());
+        var result = await _mediator.Send(query);
         return Ok(result);
     }
 
@@ -50,9 +52,9 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-public async Task<IActionResult> Delete(int id)
-{
-    await _mediator.Send(new DeleteEmployeeCommand(id));
-    return NoContent();
-}
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _mediator.Send(new DeleteEmployeeCommand(id));
+        return NoContent();
+    }
 }

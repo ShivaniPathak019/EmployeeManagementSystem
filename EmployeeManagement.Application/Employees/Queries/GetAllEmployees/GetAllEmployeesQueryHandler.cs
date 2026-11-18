@@ -1,4 +1,5 @@
 using EmployeeManagement.Application.Common.Interfaces;
+using EmployeeManagement.Application.Common.Models;
 using EmployeeManagement.Application.Employees.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EmployeeManagement.Application.Employees.Queries.GetAllEmployees;
 
 public class GetAllEmployeesQueryHandler
-    : IRequestHandler<GetAllEmployeesQuery, List<EmployeeDto>>
+    : IRequestHandler<GetAllEmployeesQuery, PagedResult<EmployeeDto>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -15,11 +16,34 @@ public class GetAllEmployeesQueryHandler
         _context = context;
     }
 
-    public async Task<List<EmployeeDto>> Handle(
+    public async Task<PagedResult<EmployeeDto>> Handle(
         GetAllEmployeesQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Employees
-            .AsNoTracking()
+        var query = _context.Employees.AsNoTracking();
+
+        if (!request.IncludeInactive)
+            query = query.Where(e => e.IsActive);
+
+        if (request.DepartmentId.HasValue)
+            query = query.Where(e => e.DepartmentId == request.DepartmentId.Value);
+
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
+            var term = request.SearchTerm.Trim();
+            query = query.Where(e =>
+                e.FirstName.Contains(term) ||
+                e.LastName.Contains(term) ||
+                e.Email.Contains(term) ||
+                e.EmployeeCode.Contains(term));
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderBy(e => e.Id)
+            .ThenBy(e => e.FirstName)
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
             .Select(e => new EmployeeDto
             {
                 Id = e.Id,
@@ -39,5 +63,13 @@ public class GetAllEmployeesQueryHandler
                 DesignationTitle = e.Designation.Title
             })
             .ToListAsync(cancellationToken);
+
+        return new PagedResult<EmployeeDto>
+        {
+            Items = items,
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize,
+            TotalCount = totalCount
+        };
     }
 }

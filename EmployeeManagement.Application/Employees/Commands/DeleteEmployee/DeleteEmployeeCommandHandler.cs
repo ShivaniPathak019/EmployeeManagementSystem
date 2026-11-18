@@ -23,8 +23,10 @@ public class DeleteEmployeeCommandHandler : IRequestHandler<DeleteEmployeeComman
 
         if (employee is null)
             throw new NotFoundException(nameof(EmployeeDetails), request.Id);
-
-        employee.IsActive = false;
+        //soft delete 
+        //employee.IsActive = false;
+        //hard delete 
+         _context.Employees.Remove(employee);
 
         await _context.SaveChangesAsync(cancellationToken);
     }
