@@ -1,31 +1,21 @@
-using EmployeeManagement.Application.Common.Interfaces;
-using EmployeeManagement.Domain.Entities;
+using EmployeeManagement.Application.Services;
+using EmployeeManagement.Application.Departments.Commands.CreateDepartment;
 using MediatR;
 
 namespace EmployeeManagement.Application.Departments.Commands.CreateDepartment;
 
 public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCommand, int>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly DepartmentService _departmentService;
 
-    public CreateDepartmentCommandHandler(IApplicationDbContext context)
+    public CreateDepartmentCommandHandler(DepartmentService departmentService)
     {
-        _context = context;
+        _departmentService = departmentService;
     }
 
-    public async Task<int> Handle(
-        CreateDepartmentCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
     {
-        var department = new DepartmentDetails
-        {
-            Name = request.Name,
-            Description = request.Description,
-            IsActive = true
-        };
-
-        _context.Departments.Add(department);
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return department.Id;
+        return await _departmentService.CreateAsync(
+            request.Name, request.Description,  cancellationToken);
     }
 }

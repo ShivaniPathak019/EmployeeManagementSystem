@@ -1,32 +1,22 @@
-using EmployeeManagement.Application.Common.Exceptions;
-using EmployeeManagement.Application.Common.Interfaces;
-using EmployeeManagement.Domain.Entities;
+using EmployeeManagement.Application.Services;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Application.Designations.Commands.UpdateDesignation;
 
-public class UpdateDesignationCommandHandler : IRequestHandler<UpdateDesignationCommand>
+public class UpdateDesignationCommandHandler
+    : IRequestHandler<UpdateDesignationCommand>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly DesignationService _designationService;
 
-    public UpdateDesignationCommandHandler(IApplicationDbContext context)
+    public UpdateDesignationCommandHandler(DesignationService designationService)
     {
-        _context = context;
+        _designationService = designationService;
     }
 
     public async Task Handle(
         UpdateDesignationCommand request, CancellationToken cancellationToken)
     {
-        var designation = await _context.Designations
-            .FirstOrDefaultAsync(d => d.Id == request.Id, cancellationToken);
-
-        if (designation is null)
-            throw new NotFoundException(nameof(Designation), request.Id);
-
-        designation.Title = request.Title;
-        designation.Description = request.Description;
-
-        await _context.SaveChangesAsync(cancellationToken);
+        await _designationService.UpdateAsync(
+            request.Id, request.Title, request.Description, cancellationToken);
     }
 }

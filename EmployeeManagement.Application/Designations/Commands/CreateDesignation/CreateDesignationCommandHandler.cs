@@ -1,30 +1,22 @@
-using EmployeeManagement.Application.Common.Interfaces;
-using EmployeeManagement.Domain.Entities;
+using EmployeeManagement.Application.Services;
 using MediatR;
 
 namespace EmployeeManagement.Application.Designations.Commands.CreateDesignation;
 
-public class CreateDesignationCommandHandler : IRequestHandler<CreateDesignationCommand, int>
+public class CreateDesignationCommandHandler
+    : IRequestHandler<CreateDesignationCommand, int>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly DesignationService _designationService;
 
-    public CreateDesignationCommandHandler(IApplicationDbContext context)
+    public CreateDesignationCommandHandler(DesignationService designationService)
     {
-        _context = context;
+        _designationService = designationService;
     }
 
     public async Task<int> Handle(
         CreateDesignationCommand request, CancellationToken cancellationToken)
     {
-        var designation = new Designation
-        {
-            Title = request.Title,
-            Description = request.Description
-        };
-
-        _context.Designations.Add(designation);
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return designation.Id;
+        return await _designationService.CreateAsync(
+            request.Title, request.Description, cancellationToken);
     }
 }

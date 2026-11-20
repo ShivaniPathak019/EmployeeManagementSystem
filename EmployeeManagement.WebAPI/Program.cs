@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // ----- Service registration -----
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-
+// ----------adding controllers service----------- 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
         options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.Strict);

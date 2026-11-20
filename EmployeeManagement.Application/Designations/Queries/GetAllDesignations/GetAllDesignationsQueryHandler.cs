@@ -1,31 +1,22 @@
-using EmployeeManagement.Application.Common.Interfaces;
 using EmployeeManagement.Application.Designations.Dtos;
+using EmployeeManagement.Application.Services;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Application.Designations.Queries.GetAllDesignations;
 
 public class GetAllDesignationsQueryHandler
     : IRequestHandler<GetAllDesignationsQuery, List<DesignationDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly DesignationService _designationService;
 
-    public GetAllDesignationsQueryHandler(IApplicationDbContext context)
+    public GetAllDesignationsQueryHandler(DesignationService designationService)
     {
-        _context = context;
+        _designationService = designationService;
     }
 
     public async Task<List<DesignationDto>> Handle(
         GetAllDesignationsQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Designations
-            .AsNoTracking()
-            .Select(d => new DesignationDto
-            {
-                Id = d.Id,
-                Title = d.Title,
-                Description = d.Description
-            })
-            .ToListAsync(cancellationToken);
+        return await _designationService.GetAllAsync(cancellationToken);
     }
 }

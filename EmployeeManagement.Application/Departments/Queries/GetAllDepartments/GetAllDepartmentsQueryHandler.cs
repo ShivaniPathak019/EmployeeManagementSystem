@@ -1,32 +1,22 @@
-using EmployeeManagement.Application.Common.Interfaces;
 using EmployeeManagement.Application.Departments.Dtos;
+using EmployeeManagement.Application.Services;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Application.Departments.Queries.GetAllDepartments;
 
 public class GetAllDepartmentsQueryHandler
     : IRequestHandler<GetAllDepartmentsQuery, List<DepartmentDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly DepartmentService _departmentService;
 
-    public GetAllDepartmentsQueryHandler(IApplicationDbContext context)
+    public GetAllDepartmentsQueryHandler(DepartmentService departmentService)
     {
-        _context = context;
+        _departmentService = departmentService;
     }
 
     public async Task<List<DepartmentDto>> Handle(
         GetAllDepartmentsQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Departments
-            .AsNoTracking()
-            .Select(d => new DepartmentDto
-            {
-                Id = d.Id,
-                Name = d.Name,
-                Description = d.Description,
-                IsActive = d.IsActive
-            })
-            .ToListAsync(cancellationToken);
+        return await _departmentService.GetAllAsync(cancellationToken);
     }
 }

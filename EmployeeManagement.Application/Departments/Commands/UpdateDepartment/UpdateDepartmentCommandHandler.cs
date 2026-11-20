@@ -1,33 +1,20 @@
-using EmployeeManagement.Application.Common.Exceptions;
-using EmployeeManagement.Application.Common.Interfaces;
-using EmployeeManagement.Domain.Entities;
+using EmployeeManagement.Application.Services;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Application.Departments.Commands.UpdateDepartment;
 
 public class UpdateDepartmentCommandHandler : IRequestHandler<UpdateDepartmentCommand>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly DepartmentService _departmentService;
 
-    public UpdateDepartmentCommandHandler(IApplicationDbContext context)
+    public UpdateDepartmentCommandHandler(DepartmentService departmentService)
     {
-        _context = context;
+        _departmentService = departmentService;
     }
 
-    public async Task Handle(
-        UpdateDepartmentCommand request, CancellationToken cancellationToken)
+    public async Task Handle(UpdateDepartmentCommand request, CancellationToken cancellationToken)
     {
-        var department = await _context.Departments
-            .FirstOrDefaultAsync(d => d.Id == request.Id, cancellationToken);
-
-        if (department is null)
-            throw new NotFoundException(nameof(DepartmentDetails), request.Id);
-
-        department.Name = request.Name;
-        department.Description = request.Description;
-        department.IsActive = request.IsActive;
-
-        await _context.SaveChangesAsync(cancellationToken);
+        await _departmentService.UpdateAsync(
+            request.Id, request.Name, request.Description, request.IsActive, cancellationToken);
     }
 }
